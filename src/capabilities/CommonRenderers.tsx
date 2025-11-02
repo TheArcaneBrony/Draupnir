@@ -191,11 +191,15 @@ export function renderRoomSetResult(
   roomResults: RoomSetResult,
   { summary }: { summary: DocumentNode }
 ): DocumentNode {
+  const entries = [...roomResults.map.entries()];
+  const notOkResults = [...entries].filter(([_,result]) => !isOk(result));
+  const okResultCount = entries.length - notOkResults.length;
   return (
     <details>
       <summary>{summary}</summary>
       <ul>
-        {[...roomResults.map.entries()].map(([roomID, outcome]) => {
+        <li>✅ Successfully updated {okResultCount} rooms!</li>
+        {[...notOkResults].map(([roomID, outcome]) => {
           return <li>{renderRoomOutcome(roomID, outcome)}</li>;
         })}
       </ul>
